@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TaskFlow.Application.Tasks.Commands.CompleteTask;
 using TaskFlow.Application.Tasks.Commands.CreateTask;
+using TaskFlow.Application.Tasks.Commands.DeleteTask;
+using TaskFlow.Application.Tasks.Queries.GetAllTasks;
 using TaskFlow.Domain.Repositories;
 
 namespace TaskFlow.API.Controllers
@@ -18,7 +21,7 @@ namespace TaskFlow.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateTaskCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateTaskCommand command)
         {
             var id = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
@@ -32,6 +35,33 @@ namespace TaskFlow.API.Controllers
                 return NotFound();
 
             return Ok(task);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllTasksQuery(), cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("{id:guid}/complete")]
+        public async Task<IActionResult> Complete(Guid id, CancellationToken cancellationToken)
+        {
+            var tasks = await _mediator.Send(new CompleteTaskCommand(id), cancellationToken);
+            if (!tasks)
+                return NotFound();
+
+            return NoContent(); //204- sucesso sem corpo
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteTaskById(Guid id, CancellationToken cancellationToken)
+        {
+            var task = await _mediator.Send(new DeleteTaskCommand(id), cancellationToken);
+            if (!task)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
