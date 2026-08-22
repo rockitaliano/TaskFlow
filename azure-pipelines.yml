@@ -5,6 +5,7 @@ trigger:
 
 variables:
   dotnetVersion: '10.0.x'
+  imageName: 'dougdesk/taskflow-api'
 
 stages:
 
@@ -39,3 +40,25 @@ stages:
         testResultsFormat: 'VSTest'
         testResultsFiles: '**/*.trx'
       condition: always()
+      
+# ─── STAGE 2: CD ──────────────────────────────────────────
+- stage: CD
+  displayName: 'Build e Push Docker'
+  dependsOn: CI
+  condition: succeeded()
+  jobs:
+  - job: Docker
+    displayName: 'Build e Push Imagem'
+    pool:
+      name: 'Default'
+    steps:
+    - task: Docker@2
+      displayName: 'Build e Push'
+      inputs:
+        containerRegistry: 'dockerhub-connection'
+        repository: '$(imageName)'
+        command: 'buildAndPush'
+        Dockerfile: 'Dockerfile.api'
+        tags: |
+          latest
+          $(Build.BuildId)
