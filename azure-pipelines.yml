@@ -15,7 +15,7 @@ stages:
   - job: Build
     displayName: 'Compilar e Testar'
     pool:
-      name: 'ubuntu-latest'
+      name: 'Default'
 
     steps:
     - task: UseDotNet@2
