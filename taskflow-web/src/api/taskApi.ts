@@ -1,7 +1,7 @@
 // import.meta.env = variáveis de ambiente do Vite
 // VITE_API_URL vem do arquivo .env.local (se existir)
 // ?? = "se for null ou undefined, usa o valor da direita"
-const API_URL = import.meta.env.VITE_API_URL ?? 'https://localhost:7121'
+const API_URL = ''
 //                                                         ↑ porta do seu backend
 
 // Função auxiliar genérica para todas as requisições HTTP
