@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskflow-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskflow-web
+  template:
+    metadata:
+      labels:
+        app: taskflow-web
+    spec:
+      containers:
+        - name: web
+          image: localhost:5000/taskflow-web:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

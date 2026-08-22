@@ -1,0 +1,50 @@
+# Versão da sintaxe do Docker Compose
+services:
+
+  # ===== API .NET =====
+  api:
+    # Nome da imagem que será gerada
+    image: taskflow-api
+    # Onde está o Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      # "host:container" — acessa no host pela 5079, dentro do container é 8080
+      - "5079:8080"
+    environment:
+      # Sobrescreve a connection string para usar o volume do SQLite
+      - ConnectionStrings__DefaultConnection=Data Source=/data/taskflow.db
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      # Persiste o banco SQLite fora do container
+      # Sem isso, os dados somem quando o container reinicia
+      - taskflow-data:/data
+    networks:
+      - taskflow-network
+
+  # ===== FRONTEND REACT =====
+  web:
+    image: taskflow-web
+    build:
+      context: ./taskflow-web
+      dockerfile: Dockerfile
+      args:
+        # URL da API que o browser vai usar para fazer as requisições
+        # Como o browser acessa direto (não passa pelo Docker), usa localhost
+        VITE_API_URL: http://localhost:5079
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    networks:
+      - taskflow-network
+
+# Volume nomeado — gerenciado pelo Docker, persiste entre restarts
+volumes:
+  taskflow-data:
+
+# Rede interna — os containers se comunicam pelo nome do serviço
+networks:
+  taskflow-network:
+    driver: bridge
