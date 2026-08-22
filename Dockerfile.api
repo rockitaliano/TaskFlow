@@ -1,0 +1,26 @@
+# ===== STAGE 1: BUILD =====
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /app
+
+COPY src/TaskFlow.Domain/TaskFlow.Domain.csproj src/TaskFlow.Domain/
+COPY src/TaskFlow.Application/TaskFlow.Application.csproj src/TaskFlow.Application/
+COPY src/TaskFlow.Infrastructure/TaskFlow.Infrastructure.csproj src/TaskFlow.Infrastructure/
+COPY src/TaskFlow.API/TaskFlow.API.csproj src/TaskFlow.API/
+
+RUN dotnet restore src/TaskFlow.API/TaskFlow.API.csproj
+
+COPY src/ src/
+
+RUN dotnet publish src/TaskFlow.API/TaskFlow.API.csproj \
+    -c Release \
+    -o /app/publish
+
+# ===== STAGE 2: RUNTIME =====
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "TaskFlow.API.dll"]
