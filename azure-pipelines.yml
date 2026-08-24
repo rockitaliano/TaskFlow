@@ -66,4 +66,4 @@ stages:
         docker compose -f $(Build.SourcesDirectory)/docker-compose.yml down
         docker compose -f $(Build.SourcesDirectory)/docker-compose.yml up -d --build
     
-    displayName: 'Deploy — Docker Compose'
+      displayName: 'Deploy — Docker Compose'
