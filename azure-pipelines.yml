@@ -63,7 +63,7 @@ stages:
           latest
           $(Build.BuildId)          
     - script: |
-        docker compose -f $(Build.SourcesDirectory)/docker-compose.yml pull
-        docker compose -f $(Build.SourcesDirectory)/docker-compose.yml up -d
+        docker compose -f $(Build.SourcesDirectory)/docker-compose.yml down
+        docker compose -f $(Build.SourcesDirectory)/docker-compose.yml up -d --build
     
     displayName: 'Deploy — Docker Compose'
