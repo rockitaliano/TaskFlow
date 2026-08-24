@@ -2,7 +2,7 @@
 services:
 
   # ===== API .NET =====
-  api:
+  taskflow-api-svc:
     # Nome da imagem que será gerada
     image: taskflow-api
     # Onde está o Dockerfile
@@ -36,7 +36,7 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - api
+      - taskflow-api-svc
     networks:
       - taskflow-network
 

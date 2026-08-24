@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: localhost:5000/taskflow-web:latest
+          image: dougdesk/taskflow-web:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
