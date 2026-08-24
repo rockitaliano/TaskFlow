@@ -62,3 +62,8 @@ stages:
         tags: |
           latest
           $(Build.BuildId)
+          
+    - script: |
+        docker compose -f $(Build.SourcesDirectory)/docker-compose.yml pull
+        docker compose -f $(Build.SourcesDirectory)/docker-compose.yml up -d
+      displayName: 'Deploy — Docker Compose'
