@@ -66,4 +66,4 @@ stages:
     - script: |
         docker compose -f $(Build.SourcesDirectory)/docker-compose.yml pull
         docker compose -f $(Build.SourcesDirectory)/docker-compose.yml up -d
-      displayName: 'Deploy — Docker Compose'
+    displayName: 'Deploy — Docker Compose'
